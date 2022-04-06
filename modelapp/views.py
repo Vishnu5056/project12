@@ -3,7 +3,7 @@ from django.views import View
 from django.http import HttpResponse
 from .models import Product
 from django.views.decorators.csrf import csrf_exempt
-from .serializers import ProductSerializer
+from .serializers import ProductModelSerializer
 from rest_framework.renderers import JSONRenderer
 class HomeView(View):
     def get(self,request):
@@ -60,7 +60,7 @@ class UpdateView(View):
 
 def productapi(request):
     products=Product.objects.all()
-    ps=ProductSerializer(products,many=True)
+    ps=ProductModelSerializer(products,many=True)
     jsondata=JSONRenderer().render(ps.data)
     return HttpResponse(jsondata,content_type="application/json")
 
