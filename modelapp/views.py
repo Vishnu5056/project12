@@ -61,11 +61,14 @@ class UpdateView(View):
 def productapi(request):
     products=Product.objects.all()
     ps=ProductModelSerializer(products,many=True)
-    jsondata=JSONRenderer().render(ps.data)
-    return HttpResponse(jsondata,content_type="application/json")
+    return JsonResponse(data=ps.data)
 
 
-
+class JsonResponse(HttpResponse):
+    def __init__(self,data,**kwargs):
+        jsondata = JSONRenderer().render(data)
+        kwargs['content_type']="application/json"
+        super().__init__(content=jsondata)
 
 
 
