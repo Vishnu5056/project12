@@ -5,6 +5,8 @@ from .models import Product
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import ProductModelSerializer
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 class HomeView(View):
     def get(self,request):
         return render(request,'home.html')
@@ -58,17 +60,14 @@ class UpdateView(View):
         resp = HttpResponse("product updated successfully")
         return resp
 
-def productapi(request):
-    products=Product.objects.all()
-    ps=ProductModelSerializer(products,many=True)
-    return JsonResponse(data=ps.data)
+class ProductApi(APIView):
+    def get(self,request):
+        products=Product.objects.all()
+        ps=ProductModelSerializer(products,many=True)
+        return Response(ps.data)
 
 
-class JsonResponse(HttpResponse):
-    def __init__(self,data,**kwargs):
-        jsondata = JSONRenderer().render(data)
-        kwargs['content_type']="application/json"
-        super().__init__(content=jsondata)
+
 
 
 
