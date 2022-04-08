@@ -7,6 +7,7 @@ from .serializers import ProductModelSerializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 class HomeView(View):
     def get(self,request):
         return render(request,'home.html')
@@ -60,11 +61,9 @@ class UpdateView(View):
         resp = HttpResponse("product updated successfully")
         return resp
 
-class ProductApi(APIView):
-    def get(self,request):
-        products=Product.objects.all()
-        ps=ProductModelSerializer(products,many=True)
-        return Response(ps.data)
+class ProductApi(generics.ListAPIView):
+    queryset=Product.objects.all()
+    serializer_class=ProductModelSerializer
 
 
 
